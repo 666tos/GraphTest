@@ -16,7 +16,8 @@ class GLViewController: GLKViewController {
     var ourShader: Shader!
     var texture: Texture!
     var VBO:GLuint=0, EBO:GLuint=0, VAO:GLuint=0
-    
+    var values = prepareData(count: 4)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -25,6 +26,7 @@ class GLViewController: GLKViewController {
         let glView = self.view as! GLKView
         glView.context = context
         glView.drawableDepthFormat = .format24
+        glView.drawableColorFormat = .RGBA8888
         
         EAGLContext.setCurrent(context)
         
@@ -33,18 +35,28 @@ class GLViewController: GLKViewController {
         self.ourShader = Shader(vertexFile: "textures.vs", fragmentFile: "textures.frag")
         
         // Load image from disk
-        self.texture = Texture(filename: "container.png")
+        self.texture = Texture(filename: "container2.png")
         
         // Set up vertex data
+//        let vertices:[GLfloat] = [
+//            // Positions       // Normals        // Texture Coords
+//             1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 1.0,
+//            -1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
+//             1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
+//             1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
+//            -1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
+//            -1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0,
+//        ]
+        
         let vertices:[GLfloat] = [
             // Positions       // Normals        // Texture Coords
-             1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 1.0,
-            -1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
-             1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
-             1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
-            -1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
-            -1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0,
-        ]
+            0.8,  0.8, 0.0,   0.0, 0.0, 1.0,   1.0, 1.0,
+            -0.8,  0.8, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
+            0.8, -0.8, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
+            0.8, -0.8, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
+            -0.8,  0.8, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
+            -0.8, -0.8, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0,
+            ]
         
         let indices: [GLuint] = [
             0, 1, 2,
@@ -100,13 +112,23 @@ class GLViewController: GLKViewController {
     }
     
     override func glkView(_ view: GLKView, drawIn rect: CGRect) {
+        glEnable(GLenum(GL_BLEND))
+        glBlendFunc(GLenum(GL_SRC_ALPHA), GLenum(GL_ONE_MINUS_SRC_ALPHA))
+        
         // Render
         // Clear the colorbuffer
-        tacx_glClearColor(red: 0.2, green: 0.3, blue: 0.3, alpha: 1.0)
+        tacx_glClearColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
         tacx_glClear(mask: GL_COLOR_BUFFER_BIT)
         
         // Activate shader
         ourShader.use()
+        
+        if (self.framesDisplayed % 2 == 0) {
+            self.appendPoint()
+        }
+        
+        glUniform1i(ourShader.uDataSize, GLint(values.count))
+        glUniform1fv(ourShader.uData, GLsizei(values.count), values)
         
         // Bind Texture
         tacx_glBindTexture(target: GL_TEXTURE_2D, texture: self.texture.id)
@@ -114,5 +136,20 @@ class GLViewController: GLKViewController {
         // Draw container
         tacx_glBindVertexArray(VAO)
         tacx_glDrawElements(mode: GL_TRIANGLES, count: 6, type: GL_UNSIGNED_INT, indices: nil)
+    }
+    
+    private class func prepareData(count: Int) -> [GLfloat] {
+        let points = GraphMaskGenerator.generatePoints(count)
+        let diff = points.max - points.min
+        let values: [GLfloat] = points.data.map { GLfloat(($0.y - points.min) / diff) }
+        return values
+    }
+    
+    private func appendPoint() {
+        let random = CGFloat(drand48() - 0.5)
+        let delta = GLfloat(0.2 * random)
+        let value = self.values.last! + delta
+        let normalizedValue = max(min(value, 1), 0)
+        self.values.append(normalizedValue)
     }
 }

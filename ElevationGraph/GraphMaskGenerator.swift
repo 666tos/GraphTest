@@ -16,6 +16,16 @@ class GraphMaskGenerator {
     init() {
     }
     
+    class func generatePoints(_ count: Int, value: CGFloat, min: CGFloat, max: CGFloat) -> Points {
+        var points: [CGPoint] = []
+        
+        for i in 0 ..< count {
+            points.append(CGPoint(x: CGFloat(i), y: value))
+        }
+        
+        return (points, min, max)
+    }
+    
     class func generatePoints(_ count: Int) -> Points {
         var points: [CGPoint] = []
         

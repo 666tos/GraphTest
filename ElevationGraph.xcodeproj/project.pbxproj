@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A088E87216FE64300A057ED /* container2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A088E86216FE64200A057ED /* container2.png */; };
 		9A36D9692153D600009D4CDE /* TileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A36D9682153D600009D4CDE /* TileViewController.swift */; };
 		9A36D96B2153D6D3009D4CDE /* TiledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A36D96A2153D6D3009D4CDE /* TiledView.swift */; };
 		9A36D96F21552BE9009D4CDE /* FillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A36D96E21552BE9009D4CDE /* FillView.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9A088E86216FE64200A057ED /* container2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container2.png; sourceTree = "<group>"; };
 		9A36D9682153D600009D4CDE /* TileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileViewController.swift; sourceTree = "<group>"; };
 		9A36D96A2153D6D3009D4CDE /* TiledView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TiledView.swift; sourceTree = "<group>"; };
 		9A36D96E21552BE9009D4CDE /* FillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillView.swift; sourceTree = "<group>"; };
@@ -107,11 +109,12 @@
 			isa = PBXGroup;
 			children = (
 				9AAA4E1B216F938200E76883 /* container.png */,
-				9AAA4DF6216F7B6A00E76883 /* textures.frag */,
+				9A088E86216FE64200A057ED /* container2.png */,
 				9AAA4DF7216F7B6A00E76883 /* main.swift */,
 				9AAA4DF8216F7B6A00E76883 /* Shader.swift */,
 				9AAA4E17216F857E00E76883 /* GLCommands.swift */,
 				9AAA4E19216F8FF200E76883 /* Texture.swift */,
+				9AAA4DF6216F7B6A00E76883 /* textures.frag */,
 				9AAA4DF9216F7B6A00E76883 /* textures.vs */,
 			);
 			path = GL;
@@ -184,6 +187,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A088E87216FE64300A057ED /* container2.png in Resources */,
 				9A8816992151330D00FFCF28 /* LaunchScreen.storyboard in Resources */,
 				9AAA4E1C216F938200E76883 /* container.png in Resources */,
 				9A8816962151330D00FFCF28 /* Assets.xcassets in Resources */,

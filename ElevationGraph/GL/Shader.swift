@@ -3,8 +3,9 @@ import GLKit
 
 public class Shader {
 
-    public private(set) var program:GLuint = 0
-
+    public private(set) var program: GLuint = 0
+    public private(set) var uData: Int32 = 0
+    public private(set) var uDataSize: Int32 = 0
 
     public init(vertex:String, fragment:String)
     {
@@ -19,7 +20,7 @@ public class Shader {
             fatalError(errorMessage)
         }
         self.program = tacx_glCreateProgram()
-        if let errorMessage = Shader.linkProgram(program, vertex: vertexID, fragment: fragmentID) {
+        if let errorMessage = linkProgram(program, vertex: vertexID, fragment: fragmentID) {
             fatalError(errorMessage)
         }
     }
@@ -78,16 +79,19 @@ public class Shader {
     }
 
 
-    private static func linkProgram(_ program: GLuint, vertex: GLuint, fragment: GLuint) -> String?
+    private func linkProgram(_ program: GLuint, vertex: GLuint, fragment: GLuint) -> String?
     {
         tacx_glAttachShader(program: program, shader: vertex)
         tacx_glAttachShader(program: program, shader: fragment)
         
-        glBindAttribLocation(program, 0, "_inPosition");
-        glBindAttribLocation(program, 1, "_inNormal");
-        glBindAttribLocation(program, 2, "_inTexCoord");
+        glBindAttribLocation(program, 0, "_inPosition")
+        glBindAttribLocation(program, 1, "_inNormal")
+        glBindAttribLocation(program, 2, "_inTexCoord")
         
         tacx_glLinkProgram(program)
+        
+        uData = glGetUniformLocation(program, "_uData")
+        uDataSize = glGetUniformLocation(program, "_uDataSize")
 
         var success:GLint = 1
         tacx_glGetProgramiv(program: program, pname: GL_LINK_STATUS, params: &success)
