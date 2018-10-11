@@ -7,8 +7,16 @@ varying lowp vec3 _vPosition;
 varying lowp vec3 _vNormal;
 varying lowp vec2 _vTexCoord;
 
-lowp float getValue(int index) {
-    return _uData[index];
+lowp float getValue(lowp float index) {
+    lowp int lowIndex = int(floor(index));
+    lowp int highIndex = int(ceil(index));
+    
+    lowp float lowValue = _uData[lowIndex];
+    lowp float highValue = _uData[highIndex];
+    lowp float diff = highValue - lowValue;
+    lowp float result = lowValue + fract(index) * diff;
+    
+    return result;
 }
 
 lowp vec4 getColor(lowp float value, lowp float y) {
@@ -28,7 +36,7 @@ lowp vec4 getColor(lowp float value, lowp float y) {
 void main() {
     lowp float dataSizeFloat = float(_uDataSize);
     lowp float floatIndex = clamp(_vTexCoord.x * dataSizeFloat, 0.0, dataSizeFloat);
-    lowp float value = getValue(int(floatIndex));
+    lowp float value = getValue(floatIndex);
     lowp vec4 textureColor = texture2D(_uTexture, _vTexCoord);
     lowp vec4 plotColor = getColor(value, _vTexCoord.y);
     
