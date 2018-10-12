@@ -9,7 +9,7 @@
 import Foundation
 import GLKit
 
-let MAX_COUNT = 1024
+let MAX_COUNT = 128
 
 class Graph {
     let bufferTexture = BufferTexture()
@@ -45,25 +45,33 @@ class Graph {
         tacx_glDrawElements(mode: GL_TRIANGLES, count: 6, type: GL_UNSIGNED_INT, indices: nil)
     }
     
-    private class func prepareData(count: Int) -> [GLfloat] {
-        let points = GraphMaskGenerator.generatePoints(count, value: 0.5, min: 0, max: 1)
-        let diff = points.max - points.min
-        let values: [GLfloat] = points.data.map { GLfloat(($0.y - points.min) / diff) }
-        return values
+    private class func prepareData(count: Int) -> [CGPoint] {
+        var points: [CGPoint] = []
+        
+        var x = CGFloat(0)
+        
+        for i in 0 ..< count {
+            points.append(CGPoint(x: x + CGFloat(i), y: 0.5))
+        }
+        
+        return points
     }
     
     func appendPoint() {
+        let lastPoint = self.values.last!
+        
         let random = CGFloat(drand48() - 0.5)
-        let delta = GLfloat(0.05 * random)
-        let value = self.values[self.filledDataSize] + delta
-        let normalizedValue = max(min(value, 1), 0)
+        let delta = random / 10
+        
+        let value = max(min(lastPoint.y + delta, 1), 0)
+        let point = CGPoint(x: lastPoint.x + 1, y: value)
         
         if (self.filledDataSize == MAX_COUNT - 1) {
             self.values.remove(at: 0)
-            self.values.append(normalizedValue)
+            self.values.append(point)
         }
         else {
-            self.values[self.filledDataSize + 1] = normalizedValue
+            self.values[self.filledDataSize + 1] = point
             self.filledDataSize += 1
         }
     }

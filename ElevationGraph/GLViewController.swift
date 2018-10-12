@@ -126,8 +126,8 @@ class GLViewController: GLKViewController {
         ourShader.use()
         
         var transform = GLKMatrix4Identity
-        transform = GLKMatrix4Scale(transform, 1.0, 0.15, 0.5)
-        transform = GLKMatrix4Translate(transform, 0, -4, 0)
+        transform = GLKMatrix4Scale(transform, 1.0, 0.12, 0.5)
+        transform = GLKMatrix4Translate(transform, 0, -7, 0)
         
         glUniform2f(ourShader.uSize, GLfloat(view.bounds.size.width/2), GLfloat(view.bounds.size.height/2))
         
