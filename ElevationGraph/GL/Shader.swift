@@ -4,9 +4,10 @@ import GLKit
 public class Shader {
 
     public private(set) var program: GLuint = 0
-    public private(set) var uData: Int32 = 0
     public private(set) var uDataSize: Int32 = 0
     public private(set) var uSize: Int32 = 0
+    public private(set) var uTextureWidth: Int32 = 0
+    public private(set) var uTransform: Int32 = 0
 
     public init(vertex:String, fragment:String)
     {
@@ -91,9 +92,10 @@ public class Shader {
         
         tacx_glLinkProgram(program)
         
-        uData = glGetUniformLocation(program, "_uData")
         uDataSize = glGetUniformLocation(program, "_uDataSize")
         uSize = glGetUniformLocation(program, "_uSize")
+        uTextureWidth = glGetUniformLocation(program, "_uTextureWidth")
+        uTransform = glGetUniformLocation(program, "_uTransform")
 
         var success:GLint = 1
         tacx_glGetProgramiv(program: program, pname: GL_LINK_STATUS, params: &success)

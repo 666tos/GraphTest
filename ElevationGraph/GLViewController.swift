@@ -10,13 +10,16 @@ import UIKit
 import GLKit
 
 let WIDTH:GLsizei = 800, HEIGHT:GLsizei = 600
+let MAX_COUNT = 128
 
 class GLViewController: GLKViewController {
     
     var ourShader: Shader!
     var texture: Texture!
+    var bufferTexture: BufferTexture!
     var VBO:GLuint=0, EBO:GLuint=0, VAO:GLuint=0
-    var values = prepareData(count: 4)
+    var filledDataSize = 0
+    var values = prepareData(count: MAX_COUNT)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +33,16 @@ class GLViewController: GLKViewController {
         
         EAGLContext.setCurrent(context)
         
+        self.preferredFramesPerSecond = 60
+        
         // Build and compile our shader program
         
         self.ourShader = Shader(vertexFile: "textures.vs", fragmentFile: "textures.frag")
         
         // Load image from disk
         self.texture = Texture(filename: "container2.png")
+        
+        self.bufferTexture = BufferTexture()
         
         // Set up vertex data
 //        let vertices:[GLfloat] = [
@@ -112,6 +119,12 @@ class GLViewController: GLKViewController {
     }
     
     override func glkView(_ view: GLKView, drawIn rect: CGRect) {
+        if (self.framesDisplayed % 2 == 0) {
+            self.appendPoint()
+        }
+        
+        _ = self.bufferTexture.load(self.values)
+        
         glEnable(GLenum(GL_BLEND))
         glBlendFunc(GLenum(GL_SRC_ALPHA), GLenum(GL_ONE_MINUS_SRC_ALPHA))
         
@@ -123,20 +136,25 @@ class GLViewController: GLKViewController {
         // Activate shader
         ourShader.use()
         
-        if (self.framesDisplayed % 2 == 0) {
-            self.appendPoint()
-        }
+        var transform = GLKMatrix4Identity
+        transform = GLKMatrix4Scale(transform, 1.0, 0.5, 0.5)
+        transform = GLKMatrix4Translate(transform, 0, -0.8, 0)
         
-        glUniform1i(ourShader.uDataSize, GLint(values.count))
-        glUniform1fv(ourShader.uData, GLsizei(values.count), values)
+        glUniform1i(ourShader.uDataSize, GLint(self.filledDataSize))
+        glUniform1i(ourShader.uTextureWidth, GLint(MAX_COUNT))
         glUniform2f(ourShader.uSize, GLfloat(view.bounds.size.width/2), GLfloat(view.bounds.size.height/2))
         
         // Bind Texture
-        tacx_glBindTexture(target: GL_TEXTURE_2D, texture: self.texture.id)
+        tacx_glBindTexture(target: GL_TEXTURE_2D, texture: self.bufferTexture.id)
         
         // Draw container
         tacx_glBindVertexArray(VAO)
-        tacx_glDrawElements(mode: GL_TRIANGLES, count: 6, type: GL_UNSIGNED_INT, indices: nil)
+        
+        for _ in 0..<4 {
+            glUniformMatrix4fv(ourShader.uTransform, 1, 0, transform.array)
+            tacx_glDrawElements(mode: GL_TRIANGLES, count: 6, type: GL_UNSIGNED_INT, indices: nil)
+            transform = GLKMatrix4Translate(transform, 0, 0.4, 0)
+        }
     }
     
     private class func prepareData(count: Int) -> [GLfloat] {
@@ -147,14 +165,18 @@ class GLViewController: GLKViewController {
     }
     
     private func appendPoint() {
-        if (self.values.count > 512) {
-            return;
-        }
-        
         let random = CGFloat(drand48() - 0.5)
-        let delta = GLfloat(0.02 * random)
-        let value = self.values.last! + delta
+        let delta = GLfloat(0.05 * random)
+        let value = self.values[self.filledDataSize] + delta
         let normalizedValue = max(min(value, 1), 0)
-        self.values.append(normalizedValue)
+        
+        if (self.filledDataSize == MAX_COUNT - 1) {
+            self.values.remove(at: 0)
+            self.values.append(normalizedValue)
+        }
+        else {
+            self.values[self.filledDataSize + 1] = normalizedValue
+            self.filledDataSize += 1
+        }
     }
 }

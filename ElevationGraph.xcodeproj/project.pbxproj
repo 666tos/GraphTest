@@ -27,6 +27,8 @@
 		9AAA4E1A216F8FF200E76883 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAA4E19216F8FF200E76883 /* Texture.swift */; };
 		9AAA4E1C216F938200E76883 /* container.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AAA4E1B216F938200E76883 /* container.png */; };
 		9AAA4E1E216F93D400E76883 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AAA4E1D216F93D400E76883 /* GLKit.framework */; };
+		9ABBB3252170A7F900E3F278 /* BufferTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBB3242170A7F900E3F278 /* BufferTexture.swift */; };
+		9ABC745D2170D0B70028F368 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABC745C2170D0B70028F368 /* Graph.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +55,8 @@
 		9AAA4E19216F8FF200E76883 /* Texture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		9AAA4E1B216F938200E76883 /* container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container.png; sourceTree = "<group>"; };
 		9AAA4E1D216F93D400E76883 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		9ABBB3242170A7F900E3F278 /* BufferTexture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferTexture.swift; sourceTree = "<group>"; };
+		9ABC745C2170D0B70028F368 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,8 @@
 				9AAA4DF8216F7B6A00E76883 /* Shader.swift */,
 				9AAA4E17216F857E00E76883 /* GLCommands.swift */,
 				9AAA4E19216F8FF200E76883 /* Texture.swift */,
+				9ABC745C2170D0B70028F368 /* Graph.swift */,
+				9ABBB3242170A7F900E3F278 /* BufferTexture.swift */,
 				9AAA4DF6216F7B6A00E76883 /* textures.frag */,
 				9AAA4DF9216F7B6A00E76883 /* textures.vs */,
 			);
@@ -205,6 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AAA4E18216F857E00E76883 /* GLCommands.swift in Sources */,
+				9ABC745D2170D0B70028F368 /* Graph.swift in Sources */,
 				9AAA4DFC216F7B6A00E76883 /* Shader.swift in Sources */,
 				9A36D9692153D600009D4CDE /* TileViewController.swift in Sources */,
 				9A36D96F21552BE9009D4CDE /* FillView.swift in Sources */,
@@ -213,6 +220,7 @@
 				9AAA4E1A216F8FF200E76883 /* Texture.swift in Sources */,
 				9A8816A12151336100FFCF28 /* GraphMaskGenerator.swift in Sources */,
 				9A8816912151330C00FFCF28 /* MaskViewController.swift in Sources */,
+				9ABBB3252170A7F900E3F278 /* BufferTexture.swift in Sources */,
 				9A88168F2151330C00FFCF28 /* AppDelegate.swift in Sources */,
 				9A36D97121553A5D009D4CDE /* FloatingPoint+Extension.swift in Sources */,
 			);

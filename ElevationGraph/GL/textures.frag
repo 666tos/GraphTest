@@ -1,14 +1,21 @@
-uniform lowp float _uData[512];
 uniform int _uDataSize;
 uniform highp vec2 _uSize;
 
 uniform sampler2D _uTexture;
+uniform int _uTextureWidth;
 
 varying lowp vec3 _vPosition;
 varying lowp vec3 _vNormal;
 varying lowp vec2 _vTexCoord;
 
-lowp vec2 getValue(lowp float x, highp float lineThickness) {
+highp float readTextureValue(int x) {
+    highp float fullTextureWidth = float(_uTextureWidth);
+//    highp float scale = float(_uDataSize) / float(fullTextureWidth);
+    highp float floatIndex = float(x) / fullTextureWidth;
+    return texture2D(_uTexture, vec2(floatIndex, 0)).r;
+}
+
+highp vec2 getValue(lowp float x, highp float lineThickness) {
     highp float floatDataSize = float(_uDataSize);
     lowp float halfThickness = 0.5 * lineThickness;
     
@@ -16,46 +23,46 @@ lowp vec2 getValue(lowp float x, highp float lineThickness) {
     int leftIndex = int(floor(floatIndex));
     int rightIndex = int(ceil(floatIndex));
     
-    if (floatDataSize < _uSize.x) {
+//    if (floatDataSize < _uSize.x) {
         // Need interpolation
-        lowp float leftValue = _uData[leftIndex];
-        lowp float rightValue = _uData[rightIndex];
-        lowp float diff = rightValue - leftValue;
-        lowp float result = leftValue + fract(floatIndex) * diff;
+        highp float leftValue = readTextureValue(leftIndex);
+        highp float rightValue = readTextureValue(rightIndex);
+        highp float diff = rightValue - leftValue;
+        highp float result = leftValue + fract(floatIndex) * diff;
         
         return vec2(result - halfThickness, result + halfThickness);
-    }
-    else {
-        // Need range
-        highp float floatOffset = halfThickness * floatDataSize;
-        int offset = int(ceil(floatOffset));
-        rightIndex = leftIndex + offset;
-        
-        lowp float leftValue = _uData[leftIndex];
-        lowp float rightValue = _uData[rightIndex];
-        
-        lowp float avg = 0.5 * (leftValue + rightValue);
-        lowp float minValue = avg - halfThickness;
-        lowp float maxValue = avg + halfThickness;
-        
-//        lowp float minValue = min(leftValue, rightValue) - halfThickness;
-//        lowp float maxValue = max(leftValue, rightValue) + halfThickness;
-        
-        return vec2(minValue, maxValue);
-    }
+//    }
+//    else {
+//        // Need range
+//        highp float floatOffset = halfThickness * floatDataSize;
+//        int offset = int(ceil(floatOffset));
+//        rightIndex = leftIndex + offset;
+//
+//        highp float leftValue = readTextureValue(leftIndex);
+//        highp float rightValue = readTextureValue(rightIndex);
+//
+//        highp float avg = 0.5 * (leftValue + rightValue);
+//        highp float minValue = avg - halfThickness;
+//        highp float maxValue = avg + halfThickness;
+//
+////        lowp float minValue = min(leftValue, rightValue) - halfThickness;
+////        lowp float maxValue = max(leftValue, rightValue) + halfThickness;
+//
+//        return vec2(minValue, maxValue);
+//    }
 }
 
-lowp vec4 getColor(lowp float x, lowp float y) {
+highp vec4 getColor(highp float x, highp float y) {
     
 //    highp float dataSizeFloat = float(_uDataSize);
 //    lowp float floatIndex = clamp(x * dataSizeFloat, 0.0, dataSizeFloat);
     highp float lineThickness = 4.0/256.0;
-    lowp vec2 value = getValue(x, lineThickness);
+    highp vec2 value = getValue(x, lineThickness);
     
-    lowp vec4 backgroundColor = vec4(0.0, 1.0, 0.0, 0.0);
-    lowp vec4 lineColor = vec4(0.0, 0.0, 1.0, 1.0);
+    highp vec4 backgroundColor = vec4(0.0, 1.0, 0.0, 0.0);
+    highp vec4 lineColor = vec4(0.0, 0.0, 1.0, 1.0);
     
-    lowp vec4 plotColor = backgroundColor;
+    highp vec4 plotColor = backgroundColor;
     
     if (y > value[1]);
     else if (y > value[0]) plotColor = lineColor;
@@ -65,8 +72,8 @@ lowp vec4 getColor(lowp float x, lowp float y) {
 }
 
 void main() {
-//    lowp vec4 textureColor = texture2D(_uTexture, _vTexCoord);
-    lowp vec4 plotColor = getColor(_vTexCoord.x, _vTexCoord.y);
+//    lowp vec4 textureColor = texture2D(_uTexture, vec2(_vTexCoord.x, 0));
+    highp vec4 plotColor = getColor(_vTexCoord.x, _vTexCoord.y);
     
 //    gl_FragColor = vec4(textureColor.r, textureColor.g, textureColor.b, plotColor.a);
     gl_FragColor = plotColor;

@@ -9,6 +9,14 @@
 import Foundation
 import GLKit
 
+extension GLKMatrix4 {
+    var array: [GLfloat] {
+        return (0..<16).map { i in
+            self[i]
+        }
+    }
+}
+
 public func tacx_glCreateShader(type: Int32) -> GLuint {
     return glCreateShader(GLenum(type))
 }

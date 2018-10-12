@@ -6,10 +6,12 @@ varying lowp vec3 _vPosition;
 varying lowp vec3 _vNormal;
 varying lowp vec2 _vTexCoord;
 
+uniform highp mat4 _uTransform;
+
 void main() {
     _vPosition = _inPosition;
     _vNormal = _inNormal;
     _vTexCoord = _inTexCoord;
     
-    gl_Position = vec4(_inPosition, 1.0);
+    gl_Position = _uTransform * vec4(_inPosition, 1.0);
 }
