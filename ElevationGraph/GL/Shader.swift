@@ -6,6 +6,7 @@ public class Shader {
     public private(set) var program: GLuint = 0
     public private(set) var uData: Int32 = 0
     public private(set) var uDataSize: Int32 = 0
+    public private(set) var uSize: Int32 = 0
 
     public init(vertex:String, fragment:String)
     {
@@ -92,6 +93,7 @@ public class Shader {
         
         uData = glGetUniformLocation(program, "_uData")
         uDataSize = glGetUniformLocation(program, "_uDataSize")
+        uSize = glGetUniformLocation(program, "_uSize")
 
         var success:GLint = 1
         tacx_glGetProgramiv(program: program, pname: GL_LINK_STATUS, params: &success)

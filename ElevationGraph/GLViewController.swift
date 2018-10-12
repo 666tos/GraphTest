@@ -129,6 +129,7 @@ class GLViewController: GLKViewController {
         
         glUniform1i(ourShader.uDataSize, GLint(values.count))
         glUniform1fv(ourShader.uData, GLsizei(values.count), values)
+        glUniform2f(ourShader.uSize, GLfloat(view.bounds.size.width/2), GLfloat(view.bounds.size.height/2))
         
         // Bind Texture
         tacx_glBindTexture(target: GL_TEXTURE_2D, texture: self.texture.id)
@@ -139,15 +140,19 @@ class GLViewController: GLKViewController {
     }
     
     private class func prepareData(count: Int) -> [GLfloat] {
-        let points = GraphMaskGenerator.generatePoints(count)
+        let points = GraphMaskGenerator.generatePoints(count, value: 0.5, min: 0, max: 1)
         let diff = points.max - points.min
         let values: [GLfloat] = points.data.map { GLfloat(($0.y - points.min) / diff) }
         return values
     }
     
     private func appendPoint() {
+        if (self.values.count > 512) {
+            return;
+        }
+        
         let random = CGFloat(drand48() - 0.5)
-        let delta = GLfloat(0.2 * random)
+        let delta = GLfloat(0.02 * random)
         let value = self.values.last! + delta
         let normalizedValue = max(min(value, 1), 0)
         self.values.append(normalizedValue)
