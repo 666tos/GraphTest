@@ -9,17 +9,11 @@
 import UIKit
 import GLKit
 
-let WIDTH:GLsizei = 800, HEIGHT:GLsizei = 600
-let MAX_COUNT = 128
-
 class GLViewController: GLKViewController {
     
     var ourShader: Shader!
-    var texture: Texture!
-    var bufferTexture: BufferTexture!
     var VBO:GLuint=0, EBO:GLuint=0, VAO:GLuint=0
-    var filledDataSize = 0
-    var values = prepareData(count: MAX_COUNT)
+    var graphs: [Graph] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,21 +33,18 @@ class GLViewController: GLKViewController {
         
         self.ourShader = Shader(vertexFile: "textures.vs", fragmentFile: "textures.frag")
         
-        // Load image from disk
-        self.texture = Texture(filename: "container2.png")
+        let colors = [UIColor(rgb: 0x1abc9c),
+                      UIColor(rgb: 0x2980b9),
+                      UIColor(rgb: 0x8e44ad),
+                      UIColor(rgb: 0xf1c40f),
+                      UIColor(rgb: 0xe74c3c),
+                      UIColor(rgb: 0xc0392b),
+                      UIColor(rgb: 0xecf0f1),
+                      UIColor(rgb: 0x1abc9c)]
         
-        self.bufferTexture = BufferTexture()
-        
-        // Set up vertex data
-//        let vertices:[GLfloat] = [
-//            // Positions       // Normals        // Texture Coords
-//             1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 1.0,
-//            -1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
-//             1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
-//             1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   1.0, 0.0,
-//            -1.0,  1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 1.0,
-//            -1.0, -1.0, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0,
-//        ]
+        for i in 0 ..< 8 {
+            self.graphs.append(Graph(shader: self.ourShader, graphColor: colors[i]))
+        }
         
         let vertices:[GLfloat] = [
             // Positions       // Normals        // Texture Coords
@@ -120,63 +111,34 @@ class GLViewController: GLKViewController {
     
     override func glkView(_ view: GLKView, drawIn rect: CGRect) {
         if (self.framesDisplayed % 2 == 0) {
-            self.appendPoint()
+            self.graphs.forEach { $0.appendPoint() }
         }
-        
-        _ = self.bufferTexture.load(self.values)
         
         glEnable(GLenum(GL_BLEND))
         glBlendFunc(GLenum(GL_SRC_ALPHA), GLenum(GL_ONE_MINUS_SRC_ALPHA))
         
         // Render
         // Clear the colorbuffer
-        tacx_glClearColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        tacx_glClearColor(red: 0.05, green: 0.05, blue: 0.075, alpha: 1.0)
         tacx_glClear(mask: GL_COLOR_BUFFER_BIT)
         
         // Activate shader
         ourShader.use()
         
         var transform = GLKMatrix4Identity
-        transform = GLKMatrix4Scale(transform, 1.0, 0.5, 0.5)
-        transform = GLKMatrix4Translate(transform, 0, -0.8, 0)
+        transform = GLKMatrix4Scale(transform, 1.0, 0.15, 0.5)
+        transform = GLKMatrix4Translate(transform, 0, -4, 0)
         
-        glUniform1i(ourShader.uDataSize, GLint(self.filledDataSize))
-        glUniform1i(ourShader.uTextureWidth, GLint(MAX_COUNT))
         glUniform2f(ourShader.uSize, GLfloat(view.bounds.size.width/2), GLfloat(view.bounds.size.height/2))
-        
-        // Bind Texture
-        tacx_glBindTexture(target: GL_TEXTURE_2D, texture: self.bufferTexture.id)
         
         // Draw container
         tacx_glBindVertexArray(VAO)
         
-        for _ in 0..<4 {
-            glUniformMatrix4fv(ourShader.uTransform, 1, 0, transform.array)
-            tacx_glDrawElements(mode: GL_TRIANGLES, count: 6, type: GL_UNSIGNED_INT, indices: nil)
-            transform = GLKMatrix4Translate(transform, 0, 0.4, 0)
-        }
-    }
-    
-    private class func prepareData(count: Int) -> [GLfloat] {
-        let points = GraphMaskGenerator.generatePoints(count, value: 0.5, min: 0, max: 1)
-        let diff = points.max - points.min
-        let values: [GLfloat] = points.data.map { GLfloat(($0.y - points.min) / diff) }
-        return values
-    }
-    
-    private func appendPoint() {
-        let random = CGFloat(drand48() - 0.5)
-        let delta = GLfloat(0.05 * random)
-        let value = self.values[self.filledDataSize] + delta
-        let normalizedValue = max(min(value, 1), 0)
-        
-        if (self.filledDataSize == MAX_COUNT - 1) {
-            self.values.remove(at: 0)
-            self.values.append(normalizedValue)
-        }
-        else {
-            self.values[self.filledDataSize + 1] = normalizedValue
-            self.filledDataSize += 1
+        for graph in self.graphs {
+            graph.transform = transform
+            graph.draw()
+            
+            transform = GLKMatrix4Translate(transform, 0, 2, 0)
         }
     }
 }

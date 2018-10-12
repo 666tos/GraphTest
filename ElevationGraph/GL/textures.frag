@@ -3,6 +3,7 @@ uniform highp vec2 _uSize;
 
 uniform sampler2D _uTexture;
 uniform int _uTextureWidth;
+uniform lowp vec3 _uLineColor;
 
 varying lowp vec3 _vPosition;
 varying lowp vec3 _vNormal;
@@ -59,14 +60,12 @@ highp vec4 getColor(highp float x, highp float y) {
     highp float lineThickness = 4.0/256.0;
     highp vec2 value = getValue(x, lineThickness);
     
-    highp vec4 backgroundColor = vec4(0.0, 1.0, 0.0, 0.0);
-    highp vec4 lineColor = vec4(0.0, 0.0, 1.0, 1.0);
+    highp vec4 backgroundColor = vec4(0.0, 0.0, 0.0, 0.0);
+    highp vec4 plotColor = vec4(_uLineColor, 1.0);
     
-    highp vec4 plotColor = backgroundColor;
-    
-    if (y > value[1]);
-    else if (y > value[0]) plotColor = lineColor;
-    else plotColor = lineColor * 0.5;
+    if (y > value[1]) plotColor = backgroundColor;
+    else if (y > value[0]);
+    else plotColor = plotColor * 0.5;
     
     return plotColor;
 }

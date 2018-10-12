@@ -29,6 +29,7 @@
 		9AAA4E1E216F93D400E76883 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AAA4E1D216F93D400E76883 /* GLKit.framework */; };
 		9ABBB3252170A7F900E3F278 /* BufferTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBB3242170A7F900E3F278 /* BufferTexture.swift */; };
 		9ABC745D2170D0B70028F368 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABC745C2170D0B70028F368 /* Graph.swift */; };
+		9ABC74612170D7380028F368 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABC74602170D7380028F368 /* Colors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		9AAA4E1D216F93D400E76883 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		9ABBB3242170A7F900E3F278 /* BufferTexture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferTexture.swift; sourceTree = "<group>"; };
 		9ABC745C2170D0B70028F368 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
+		9ABC74602170D7380028F368 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				9A8816972151330D00FFCF28 /* LaunchScreen.storyboard */,
 				9A88169A2151330D00FFCF28 /* Info.plist */,
 				9AAA4DF3216F7B0100E76883 /* GLViewController.swift */,
+				9ABC74602170D7380028F368 /* Colors.swift */,
 			);
 			path = ElevationGraph;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				9AAA4E18216F857E00E76883 /* GLCommands.swift in Sources */,
 				9ABC745D2170D0B70028F368 /* Graph.swift in Sources */,
 				9AAA4DFC216F7B6A00E76883 /* Shader.swift in Sources */,
+				9ABC74612170D7380028F368 /* Colors.swift in Sources */,
 				9A36D9692153D600009D4CDE /* TileViewController.swift in Sources */,
 				9A36D96F21552BE9009D4CDE /* FillView.swift in Sources */,
 				9A36D96B2153D6D3009D4CDE /* TiledView.swift in Sources */,
