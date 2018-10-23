@@ -33,17 +33,30 @@ class GLViewController: GLKViewController {
         
         self.ourShader = Shader(vertexFile: "textures.vs", fragmentFile: "textures.frag")
         
-        let colors = [UIColor(rgb: 0x1abc9c),
-                      UIColor(rgb: 0x2980b9),
-                      UIColor(rgb: 0x8e44ad),
-                      UIColor(rgb: 0xf1c40f),
-                      UIColor(rgb: 0xe74c3c),
-                      UIColor(rgb: 0xc0392b),
-                      UIColor(rgb: 0xecf0f1),
-                      UIColor(rgb: 0x1abc9c)]
+        let a = CGFloat(30.0)
+        let a2 = CGFloat(60.0)
+        
+        let sin0: Graph.F = { sin($0/a) * 0.4 + 0.5 }
+        let saw: Graph.F = { 0.5 + ($0.remainder(dividingBy: a)/a).magnitude * 0.2 }
+        let saw2: Graph.F = { 0.5 + $0.remainder(dividingBy: a2)/a2 * 0.2 }
+        let sincos12: Graph.F = { (sin($0/a) + cos(2.0 * $0/a)) * 0.5 * 0.4 + 0.5 }
+        let sincos85: Graph.F = { (sin(8.0 * $0/a) + cos(5.0 * $0/a)) * 0.5 * 0.4 + 0.5 }
+        let sincos132: Graph.F = { (sin(13.0 * $0/a) + cos(5.0 * $0/a)) * 0.5 * 0.4 + 0.5 }
+        let sincos405: Graph.F = { (sin(4.0 * $0/a) + cos(0.5 * $0/a)) * 0.5 * 0.4 + 0.5 }
+        let sinSqr: Graph.F = { pow(sin($0/a), 2) * 0.4 + 0.5 }
+        
+        let parameters: [(Graph.F, UIColor)] = [( sin0, UIColor(rgb: 0x1abc9c)),
+                                                ( saw, UIColor(rgb: 0x2980b9)),
+                                                ( saw2, UIColor(rgb: 0x8e44ad)),
+                                                ( sincos12, UIColor(rgb: 0xf1c40f)),
+                                                ( sincos85, UIColor(rgb: 0xe74c3c)),
+                                                ( sincos132, UIColor(rgb: 0xc0392b)),
+                                                ( sincos405, UIColor(rgb: 0xecf0f1)),
+                                                ( sinSqr, UIColor(rgb: 0x1abc9c))]
         
         for i in 0 ..< 8 {
-            self.graphs.append(Graph(shader: self.ourShader, graphColor: colors[i]))
+            let parameter = parameters[i]
+            self.graphs.append(Graph(shader: self.ourShader, graphColor: parameter.1, f: parameter.0))
         }
         
         let vertices:[GLfloat] = [
@@ -110,8 +123,8 @@ class GLViewController: GLKViewController {
     }
     
     override func glkView(_ view: GLKView, drawIn rect: CGRect) {
-//        if (self.framesDisplayed % 2 == 0) {
-            self.graphs.forEach { $0.appendPoint() }
+//        if (self.framesDisplayed % 4 == 0) {
+            self.graphs.forEach { $0.appendPoints() }
 //        }
         
         glEnable(GLenum(GL_BLEND))
@@ -127,7 +140,7 @@ class GLViewController: GLKViewController {
         
         var transform = GLKMatrix4Identity
         transform = GLKMatrix4Scale(transform, 1.0, 0.12, 0.5)
-        transform = GLKMatrix4Translate(transform, 0, -7, 0)
+        transform = GLKMatrix4Translate(transform, 0, 7, 0)
         
         glUniform2f(ourShader.uSize, GLfloat(view.bounds.size.width/2), GLfloat(view.bounds.size.height/2))
         
@@ -138,7 +151,7 @@ class GLViewController: GLKViewController {
             graph.transform = transform
             graph.draw()
             
-            transform = GLKMatrix4Translate(transform, 0, 2, 0)
+            transform = GLKMatrix4Translate(transform, 0, -2, 0)
         }
     }
 }

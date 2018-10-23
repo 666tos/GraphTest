@@ -14,15 +14,20 @@ private let MAX_COUNT = 1024
 private let REDUCE_SIZE = 768
 
 class Graph {
+    typealias F = (CGFloat) -> CGFloat
+    
     let bufferTexture = BufferTexture()
-    var values = prepareData(count: INITIAL_COUNT)
+    var values: [CGPoint] = []
     var transform = GLKMatrix4Identity
     let shader: Shader
     let graphColor: UIColor
+    let f: F
 
-    init(shader: Shader, graphColor: UIColor) {
+    init(shader: Shader, graphColor: UIColor, f: @escaping F) {
         self.shader = shader
         self.graphColor = graphColor
+        self.f = f
+        self.values = prepareData(count: INITIAL_COUNT)
     }
     
     func draw() {
@@ -36,8 +41,6 @@ class Graph {
         glUniformMatrix4fv(self.shader.uTransform, 1, 0, self.transform.array)
         glUniform1f(self.shader.uMinX, GLfloat(self.values.first!.x))
         glUniform1f(self.shader.uMaxX, GLfloat(self.values.last!.x))
-//        glUniform1f(self.shader.uMinX, GLfloat(0))
-//        glUniform1f(self.shader.uMaxX, GLfloat(MAX_COUNT))
 
         var red: CGFloat = 0
         var green: CGFloat = 0
@@ -50,30 +53,31 @@ class Graph {
         tacx_glDrawElements(mode: GL_TRIANGLES, count: 6, type: GL_UNSIGNED_INT, indices: nil)
     }
     
-    private class func createPoint(_ i: Int) -> CGPoint {
+    private func createPoint(_ i: Int) -> CGPoint {
         let x = CGFloat(i)
-        let value = sin(CGFloat(x)/30.0) * 0.4 + 0.5
-        return CGPoint(x: x, y: value)
+        return CGPoint(x: x, y: self.f(x))
     }
     
-    private class func prepareData(count: Int) -> [CGPoint] {
+    private func prepareData(count: Int) -> [CGPoint] {
         var points: [CGPoint] = []
         
         for i in 0 ..< count {
-            points.append(createPoint(i))
+            points.append(self.createPoint(i))
         }
         
         return points
     }
     
-    func appendPoint() {
-        let lastPoint = self.values.last!
-        
-        let point = Graph.createPoint(Int(lastPoint.x) + 1)
-        self.values.append(point)
-        
-        if (self.values.count >= MAX_COUNT - 1) {
-            self.values = DataApproximator.reduceWithDouglasPeukerN(self.values, resultCount: REDUCE_SIZE)
+    func appendPoints(count: Int = 4) {
+        for _ in 0 ..< count {
+            let lastPoint = self.values.last!
+            
+            let point = self.createPoint(Int(lastPoint.x) + 1)
+            self.values.append(point)
+            
+            if (self.values.count >= MAX_COUNT - 1) {
+                self.values = DataApproximator.reduceWithDouglasPeukerN(self.values, resultCount: REDUCE_SIZE)
+            }
         }
     }
 }
