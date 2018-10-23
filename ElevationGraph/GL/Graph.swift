@@ -9,13 +9,13 @@
 import Foundation
 import GLKit
 
-let MAX_COUNT = 128
-let REDUCE_SIZE = 20
+private let INITIAL_COUNT = 4
+private let MAX_COUNT = 1024
+private let REDUCE_SIZE = 768
 
 class Graph {
     let bufferTexture = BufferTexture()
-    var filledDataSize = 0
-    var values = prepareData(count: MAX_COUNT)
+    var values = prepareData(count: INITIAL_COUNT)
     var transform = GLKMatrix4Identity
     let shader: Shader
     let graphColor: UIColor
@@ -31,11 +31,11 @@ class Graph {
         // Bind Texture
         tacx_glBindTexture(target: GL_TEXTURE_2D, texture: self.bufferTexture.id)
         
-        glUniform1i(self.shader.uDataSize, GLint(self.filledDataSize))
-        glUniform1i(self.shader.uTextureWidth, GLint(MAX_COUNT))
+        glUniform1i(self.shader.uDataSize, GLint(self.values.count))
+        glUniform1i(self.shader.uTextureWidth, GLint(self.values.count))
         glUniformMatrix4fv(self.shader.uTransform, 1, 0, self.transform.array)
         glUniform1f(self.shader.uMinX, GLfloat(self.values.first!.x))
-        glUniform1f(self.shader.uMaxX, GLfloat(self.values[self.filledDataSize].x))
+        glUniform1f(self.shader.uMaxX, GLfloat(self.values.last!.x))
 //        glUniform1f(self.shader.uMinX, GLfloat(0))
 //        glUniform1f(self.shader.uMaxX, GLfloat(MAX_COUNT))
 
@@ -67,21 +67,13 @@ class Graph {
     }
     
     func appendPoint() {
-        let lastPoint = self.values[self.filledDataSize]
+        let lastPoint = self.values.last!
         
-//        let random = CGFloat(drand48() - 0.5)
-//        let delta = random / 10
-//        let value = max(min(lastPoint.y + delta, 1), 0)
         let point = Graph.createPoint(Int(lastPoint.x) + 1)
+        self.values.append(point)
         
-        if (self.filledDataSize == MAX_COUNT - 1) {
-            self.values.remove(at: 0)
-            self.values.append(point)
-//            self.values = DataApproximator.reduceWithDouglasPeukerN(self.values, resultCount: REDUCE_SIZE)
-        }
-        else {
-            self.values[self.filledDataSize + 1] = point
-            self.filledDataSize += 1
+        if (self.values.count >= MAX_COUNT - 1) {
+            self.values = DataApproximator.reduceWithDouglasPeukerN(self.values, resultCount: REDUCE_SIZE)
         }
     }
 }
