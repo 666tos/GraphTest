@@ -52,7 +52,7 @@ class Graph {
     
     private class func createPoint(_ i: Int) -> CGPoint {
         let x = CGFloat(i)
-        let value = sin(CGFloat(x)/30.0) / 2.0 + 0.5
+        let value = sin(CGFloat(x)/30.0) * 0.4 + 0.5
         return CGPoint(x: x, y: value)
     }
     
