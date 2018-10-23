@@ -1,34 +1,62 @@
 uniform int _uDataSize;
 uniform highp vec2 _uSize;
+uniform highp float _uMinX;
+uniform highp float _uMaxX;
 
 uniform sampler2D _uTexture;
 uniform int _uTextureWidth;
-uniform lowp vec3 _uLineColor;
+uniform highp vec3 _uLineColor;
 
-varying lowp vec3 _vPosition;
-varying lowp vec3 _vNormal;
-varying lowp vec2 _vTexCoord;
+varying highp vec3 _vPosition;
+varying highp vec3 _vNormal;
+varying highp vec2 _vTexCoord;
 
-highp float readTextureValue(int x) {
+void readTextureValue(highp float x, inout highp vec2 result[2]) {
     highp float fullTextureWidth = float(_uTextureWidth);
-    highp float floatIndex = float(x) / fullTextureWidth;
-    return texture2D(_uTexture, vec2(floatIndex, 0)).g;
+    highp float textureStep = 1.0 / fullTextureWidth;
+    
+    highp vec2 prevData = vec2(-1.0, 0.0);
+    
+    for ( int i = 0; i < _uDataSize; i++ ) {
+        highp float textureX = textureStep * float(i);
+        highp vec2 data = texture2D(_uTexture, vec2(textureX, 0.0)).xy;
+//        highp vec2 data = testData[i];
+        
+        if ((x >= prevData.x) && (x < data.x)) {
+            result[0] = prevData;
+            result[1] = data;
+            return;
+        }
+        
+        prevData = data;
+    }
+    
+//    highp float floatIndex = float(x) / fullTextureWidth;
+//    return texture2D(_uTexture, vec2(floatIndex, 0)).g;
 }
 
-highp vec2 getValue(lowp float x, highp float lineThickness) {
+highp vec2 getValue(highp float x, highp float lineThickness) {
     highp float floatDataSize = float(_uDataSize);
-    lowp float halfThickness = 0.5 * lineThickness;
+    highp float halfThickness = 0.5 * lineThickness;
     
-    highp float floatIndex = x * floatDataSize;
-    int leftIndex = int(floor(floatIndex));
-    int rightIndex = int(ceil(floatIndex));
+    highp float xPosition = _uMinX + x * (_uMaxX - _uMinX);
+   
+    highp vec2 graphPoints[2];
     
-    highp float leftValue = readTextureValue(leftIndex);
-    highp float rightValue = readTextureValue(rightIndex);
-    highp float diff = rightValue - leftValue;
-    highp float result = leftValue + fract(floatIndex) * diff;
+    readTextureValue(xPosition, graphPoints);
     
-    return vec2(result - halfThickness, result + halfThickness);
+//    highp float xLength = graphPoints[1].x - graphPoints[0].x;
+//    highp float yLength = graphPoints[1].y - graphPoints[0].y;
+//
+//    highp float weight = (x - graphPoints[0].x) / xLength;
+//    highp float result = graphPoints[0].y + weight * yLength;
+//
+//    return vec2(result - halfThickness, result + halfThickness);
+    
+    highp float minY = min(graphPoints[0].y, graphPoints[1].y);
+    highp float maxY = max(graphPoints[0].y, graphPoints[1].y);
+    
+    return vec2(minY - halfThickness, maxY + halfThickness);
 }
 
 highp vec4 getColor(highp float x, highp float y) {

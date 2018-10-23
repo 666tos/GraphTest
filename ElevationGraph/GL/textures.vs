@@ -1,10 +1,10 @@
-attribute lowp vec3 _inPosition;
-attribute lowp vec3 _inNormal;
-attribute lowp vec2 _inTexCoord;
+attribute highp vec3 _inPosition;
+attribute highp vec3 _inNormal;
+attribute highp vec2 _inTexCoord;
 
-varying lowp vec3 _vPosition;
-varying lowp vec3 _vNormal;
-varying lowp vec2 _vTexCoord;
+varying highp vec3 _vPosition;
+varying highp vec3 _vNormal;
+varying highp vec2 _vTexCoord;
 
 uniform highp mat4 _uTransform;
 

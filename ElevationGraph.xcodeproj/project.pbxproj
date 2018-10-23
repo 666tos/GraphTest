@@ -30,6 +30,7 @@
 		9ABBB3252170A7F900E3F278 /* BufferTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBB3242170A7F900E3F278 /* BufferTexture.swift */; };
 		9ABC745D2170D0B70028F368 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABC745C2170D0B70028F368 /* Graph.swift */; };
 		9ABC74612170D7380028F368 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABC74602170D7380028F368 /* Colors.swift */; };
+		9ADC5441217F4EBA00217919 /* DouglasPeucker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC5440217F4EBA00217919 /* DouglasPeucker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		9ABBB3242170A7F900E3F278 /* BufferTexture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferTexture.swift; sourceTree = "<group>"; };
 		9ABC745C2170D0B70028F368 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		9ABC74602170D7380028F368 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		9ADC5440217F4EBA00217919 /* DouglasPeucker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DouglasPeucker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				9A36D96A2153D6D3009D4CDE /* TiledView.swift */,
 				9A8816A02151336100FFCF28 /* GraphMaskGenerator.swift */,
 				9A36D97021553A5D009D4CDE /* FloatingPoint+Extension.swift */,
+				9ADC5440217F4EBA00217919 /* DouglasPeucker.swift */,
 				9A8816922151330C00FFCF28 /* Main.storyboard */,
 				9A8816952151330D00FFCF28 /* Assets.xcassets */,
 				9A8816972151330D00FFCF28 /* LaunchScreen.storyboard */,
@@ -220,6 +223,7 @@
 				9A36D9692153D600009D4CDE /* TileViewController.swift in Sources */,
 				9A36D96F21552BE9009D4CDE /* FillView.swift in Sources */,
 				9A36D96B2153D6D3009D4CDE /* TiledView.swift in Sources */,
+				9ADC5441217F4EBA00217919 /* DouglasPeucker.swift in Sources */,
 				9AAA4DF4216F7B0100E76883 /* GLViewController.swift in Sources */,
 				9AAA4E1A216F8FF200E76883 /* Texture.swift in Sources */,
 				9A8816A12151336100FFCF28 /* GraphMaskGenerator.swift in Sources */,

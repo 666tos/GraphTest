@@ -110,9 +110,9 @@ class GLViewController: GLKViewController {
     }
     
     override func glkView(_ view: GLKView, drawIn rect: CGRect) {
-        if (self.framesDisplayed % 2 == 0) {
+//        if (self.framesDisplayed % 2 == 0) {
             self.graphs.forEach { $0.appendPoint() }
-        }
+//        }
         
         glEnable(GLenum(GL_BLEND))
         glBlendFunc(GLenum(GL_SRC_ALPHA), GLenum(GL_ONE_MINUS_SRC_ALPHA))

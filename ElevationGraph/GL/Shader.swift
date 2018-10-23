@@ -9,6 +9,8 @@ public class Shader {
     public private(set) var uTextureWidth: Int32 = 0
     public private(set) var uTransform: Int32 = 0
     public private(set) var uLineColor: Int32 = 0
+    public private(set) var uMinX: Int32 = 0
+    public private(set) var uMaxX: Int32 = 0
 
     public init(vertex:String, fragment:String)
     {
@@ -98,6 +100,8 @@ public class Shader {
         uTextureWidth = glGetUniformLocation(program, "_uTextureWidth")
         uTransform = glGetUniformLocation(program, "_uTransform")
         uLineColor = glGetUniformLocation(program, "_uLineColor")
+        uMinX = glGetUniformLocation(program, "_uMinX")
+        uMaxX = glGetUniformLocation(program, "_uMaxX")
 
         var success:GLint = 1
         tacx_glGetProgramiv(program: program, pname: GL_LINK_STATUS, params: &success)
